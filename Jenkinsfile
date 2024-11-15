@@ -25,36 +25,23 @@ pipeline {
         }
         stage('Environment-Based Deployment') {
             steps {
-                script {
-                    def targetDir = '/home/gaurav/Devops/apache-tomcat-9.0.89/webapps'
-                    def environment = params.ENV
-                    
-                    echo "Deploying to ${environment}"
-                    sh "cp target/TV.war ${targetDir}"
-                    
-                    // Optionally, add environment-specific behavior
-                    if (environment == "DEV") {
-                        echo "Additional configuration or deployment logic for DEV"
-                    } else if (environment == "QA") {
-                        echo "Additional configuration or deployment logic for QA"
-                    } else if (environment == "UAT") {
-                        echo "Additional configuration or deployment logic for UAT"
-                    }
-                }
-            }
-        }
-        stage('Slack Notification') {
-            steps {
-                slackSend botUser: true, 
-                          channel: '#tv', 
-                          color: 'good', 
-                          failOnError: true, 
-                          message: "Deployment successful for ${params.ENV} environment", 
-                          notifyCommitters: true, 
-                          teamDomain: 'tv', 
-                          tokenCredentialId: '973bcbcb-68f8-4231-8391-0405ddbeab34'
+                sh '''#!/bin/bash
+                if [ "${ENV}" == "DEV" ]; then
+                    echo "Deployed to DEV"
+                    cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
+                elif [ "${ENV}" == "QA" ]; then
+                    echo "Deployed to QA"
+                    cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
+                elif [ "${ENV}" == "UAT" ]; then
+                    echo "Deployed to UAT"
+                    cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
+                fi'''
             }
         }
     }
+     stage('slack') {
+            steps {
+                  slackSend baseUrl: 'https://hooks.slack.com/services/', channel: 'tv1', color: 'good', failOnError: true, message: 'This is use for slack for notification ', notifyCommitters: true, teamDomain: 'TV', tokenCredentialId: '973bcbcb-68f8-4231-8391-0405ddbeab34'
 }
-
+}
+}
