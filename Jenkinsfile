@@ -1,15 +1,11 @@
 pipeline {
     agent any
-
+    triggers {
+        pollSCM('* * * * *') // Poll every minute
+    }
     parameters {
-        string(defaultValue: 'DEV', name: 'ENV')
         choice(choices: ['DEV', 'QA', 'UAT'], name: 'ENV')
     }
-
-    triggers {
-        pollSCM('* * * * *')  
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -23,18 +19,23 @@ pipeline {
         }
         stage('Deployment') {
             steps {
-                script {
-                    if (env.ENV == 'DEV') {
-                        sh 'cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.88/webapps'
-                        echo "Deployment has been completed on DEV!"
-                    } else if (env.ENV == 'QA') {
-                        sh 'cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.88/webapps'
-                        echo "Deployment has been completed on QA!"
-                    } else if (env.ENV == 'UAT') {
-                        sh 'cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.88/webapps'
-                        echo "Deployment has been done on UAT!"
-                    }
-                }
+                // Deploying a general file (TV.war) to Tomcat
+                sh 'cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps'
+            }
+        }
+        stage('Environment-Based Deployment') {
+            steps {
+                sh '''#!/bin/bash
+                if [ "${ENV}" == "DEV" ]; then
+                    echo "Deployed to DEV"
+                    cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
+                elif [ "${ENV}" == "QA" ]; then
+                    echo "Deployed to QA"
+                    cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
+                elif [ "${ENV}" == "UAT" ]; then
+                    echo "Deployed to UAT"
+                    cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
+                fi'''
             }
         }
     }
