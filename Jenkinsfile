@@ -1,11 +1,11 @@
-pipeline {
-    agent any
+   parameters {
+        string defaultValue: 'DEV', name: 'ENV'
+    }
+    
     triggers {
-        pollSCM('* * * * *') // Poll every minute
+        pollSCM '* * * * *'
     }
-    parameters {
-        choice(choices: ['DEV', 'QA', 'UAT'], name: 'ENV')
-    }
+    
     stages {
         stage('Checkout') {
             steps {
@@ -19,25 +19,16 @@ pipeline {
         }
         stage('Deployment') {
             steps {
-                // Deploying a general file (TV.war) to Tomcat
-                sh 'cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps'
-            }
-        }
-        stage('Environment-Based Deployment') {
-            steps {
-                sh '''#!/bin/bash
-                if [ "${ENV}" == "DEV" ]; then
-                    echo "Deployed to DEV"
-                    cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
-                elif [ "${ENV}" == "QA" ]; then
-                    echo "Deployed to QA"
-                    cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
-                elif [ "${ENV}" == "UAT" ]; then
-                    echo "Deployed to UAT"
-                    cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
-                fi'''
+                script {
+                    if (env.ENV == 'QA') {
+                        sh 'cp target/pipeline.war /home/gaurav/Devops/apache-tomcat-9.0.88/webapps'
+                        echo "Deployment has been COMPLETED on QA!"
+                    } else if (env.ENV == 'UAT') {
+                        sh 'cp target/pipeline.war /home/gaurav/Devops/apache-tomcat-9.0.88/webapps'
+                        echo "Deployment has been done on UAT!"
+                    }
+                }
             }
         }
     }
 }
-
