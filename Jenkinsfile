@@ -39,9 +39,4 @@ pipeline {
             }
         }
     }
-     stage('slack') {
-            steps {
-                  slackSend baseUrl: 'https://hooks.slack.com/services/', channel: 'tv1', color: 'good', failOnError: true, message: 'This is use for slack for notification ', notifyCommitters: true, teamDomain: 'TV', tokenCredentialId: '973bcbcb-68f8-4231-8391-0405ddbeab34'
-}
-}
-}
+
