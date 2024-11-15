@@ -39,4 +39,9 @@ pipeline {
             }
         }
     }
+     stage('slack') {
+            steps {
+                  slackSend botUser: true, channel: 'tv', color: 'good ', failOnError: true, message: 'This  is updated script is updated ', notifyCommitters: true, teamDomain: 'tv', tokenCredentialId: '973bcbcb-68f8-4231-8391-0405ddbeab34'
+}
+}
 }
