@@ -1,14 +1,15 @@
-   parameters {
-        string defaultValue: 'DEV', name: 'ENV'
-    }
-    
-    triggers {
-        pollSCM '* * * * *'
-    }
+pipeline {
+    agent any
+
     parameters {
+        string(defaultValue: 'DEV', name: 'ENV')
         choice(choices: ['DEV', 'QA', 'UAT'], name: 'ENV')
     }
-    
+
+    triggers {
+        pollSCM('* * * * *')  
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -23,9 +24,12 @@
         stage('Deployment') {
             steps {
                 script {
-                    if (env.ENV == 'QA') {
+                    if (env.ENV == 'DEV') {
+                        sh 'cp target/TV.war /path/to/dev/tomcat/webapps'
+                        echo "Deployment has been completed on DEV!"
+                    } else if (env.ENV == 'QA') {
                         sh 'cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.88/webapps'
-                        echo "Deployment has been COMPLETED on QA!"
+                        echo "Deployment has been completed on QA!"
                     } else if (env.ENV == 'UAT') {
                         sh 'cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.88/webapps'
                         echo "Deployment has been done on UAT!"
