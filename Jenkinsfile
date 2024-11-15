@@ -28,13 +28,13 @@ pipeline {
                 sh '''#!/bin/bash
                 if [ "${ENV}" == "DEV" ]; then
                     echo "Deployed to DEV"
-                    cp target/wcl.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
+                    cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
                 elif [ "${ENV}" == "QA" ]; then
                     echo "Deployed to QA"
-                    cp target/wcl.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
+                    cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
                 elif [ "${ENV}" == "UAT" ]; then
                     echo "Deployed to UAT"
-                    cp target/wcl.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
+                    cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.89/webapps
                 fi'''
             }
         }
