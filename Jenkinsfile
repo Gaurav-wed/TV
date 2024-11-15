@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     if (env.ENV == 'DEV') {
-                        sh 'cp target/TV.war /path/to/dev/tomcat/webapps'
+                        sh 'cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.88/webapps'
                         echo "Deployment has been completed on DEV!"
                     } else if (env.ENV == 'QA') {
                         sh 'cp target/TV.war /home/gaurav/Devops/apache-tomcat-9.0.88/webapps'
